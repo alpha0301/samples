@@ -9,7 +9,7 @@ class VitalSignEntity (
     @Id
     val id: String? = null,
     val userKey: String,
-    val createdDate: LocalDate = LocalDate.now(),
+    val createdAt: LocalDate = LocalDate.now(),
     val deleted: Boolean = false
 ) {
 

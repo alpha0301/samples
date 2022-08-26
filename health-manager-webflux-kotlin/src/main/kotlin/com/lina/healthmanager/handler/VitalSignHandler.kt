@@ -12,4 +12,6 @@ class VitalSignHandler(val repository: VitalSignRepository) {
     suspend fun add(userKey: String): String {
         return repository.save(VitalSignEntity(id = UUID.randomUUID().toString(), userKey = userKey)).id.toString()
     }
+
+
 }
