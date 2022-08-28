@@ -2,6 +2,7 @@ package com.example.reactordemo.config;
 
 import com.example.reactordemo.dto.DepositRequest;
 import com.example.reactordemo.entity.Account;
+import com.example.reactordemo.handler.ExampleHandler;
 import com.example.reactordemo.handler.GetBankHandler;
 import com.example.reactordemo.handler.SampleHandler;
 import org.springframework.context.annotation.Bean;
@@ -19,23 +20,6 @@ public class RouterConfig {
 
     @Bean
     public RouterFunction<ServerResponse> example() {
-        Flux.range(1, 4)
-//                .publishOn(Schedulers.newSingle("pub1"))
-//                .subscribeOn(Schedulers.newSingle("sub1"))
-//                .publishOn(Schedulers.newSingle("pub2"))
-//                .subscribeOn(Schedulers.newSingle("sub2"))
-                .log()
-                .publishOn(Schedulers.newSingle("pub1"))
-                .map(i -> i * 10)
-                .log()
-                .subscribeOn(Schedulers.newSingle("sub1"))
-//                .log()
-                .map(i -> "num: " + i)
-                .log()
-//                .subscribeOn(Schedulers.newSingle("sub1"))
-//                .log()
-                .subscribe();
-
         return RouterFunctions.route()
                 .GET("/echo",
                         request -> ServerResponse.ok().body(BodyInserters.fromPublisher(request.bodyToMono(String.class).log(), String.class)))
@@ -45,7 +29,16 @@ public class RouterConfig {
     }
 
     @Bean
-    public RouterFunction<ServerResponse> bank(GetBankHandler handler, SampleHandler sampleHandler) {
+    public RouterFunction<ServerResponse> debug(ExampleHandler exampleHandler) {
+        return RouterFunctions.route()
+                .GET("/debug",
+                        request -> ServerResponse.ok().body(BodyInserters.fromPublisher(exampleHandler.throwIndexOutOfBound(), Integer.class)))
+                .build();
+    }
+
+    @Bean
+    public RouterFunction<ServerResponse> bank(GetBankHandler handler,
+                                               SampleHandler sampleHandler) {
         // test sample
 
         DepositRequest request = DepositRequest.create(1, 500);
