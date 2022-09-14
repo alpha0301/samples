@@ -28,11 +28,10 @@ public class SampleHandler {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        Mono<Void> mono = this.entityTemplate
+
+        return this.entityTemplate
                 .getDatabaseClient()
                 .sql(query)
                 .then();
-
-        return mono;
     }
 }
